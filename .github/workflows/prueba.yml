@@ -1,6 +1,6 @@
 name: Prueba runner y secret
- on: [push]
-  jobs:
+on: [push]
+ jobs:
    probar:
     runs-on: self-hosted
     steps:
