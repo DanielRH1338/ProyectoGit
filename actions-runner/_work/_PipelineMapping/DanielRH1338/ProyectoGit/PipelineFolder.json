@@ -1,0 +1,12 @@
+﻿{
+  "repositoryName": "DanielRH1338/ProyectoGit",
+  "pipelineDirectory": "ProyectoGit",
+  "workspaceDirectory": "ProyectoGit\\ProyectoGit",
+  "repositories": {
+    "DanielRH1338/ProyectoGit": {
+      "repositoryPath": "ProyectoGit\\ProyectoGit",
+      "lastRunOn": "09/23/2026 15:23:15 +02:00"
+    }
+  },
+  "lastRunOn": "09/23/2026 15:49:00 +02:00"
+}
