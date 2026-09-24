@@ -24,11 +24,12 @@ jobs:
      runs-on: self-hosted
      steps:
       - name: Validar Token de Producción
-        shell: bash
         run: |
-          if [ "${{ secrets.PROD_TOKEN }}" == "$LOCAL_PROD_TOKEN" ]; then
-            echo "Token correcto."
-          else
-            echo "Token incorrecto."
-            exit 1
-          fi
+          if ("$env:SECRET_TOKEN" -eq "$env:LOCAL_PROD_TOKEN") {
+          echo "Token correcto."
+        } else {
+          echo "Token incorrecto."
+          exit 1
+        }
+         
+          
