@@ -24,6 +24,7 @@ jobs:
      runs-on: self-hosted
      steps:
       - name: Validar Token de Producción
+        shell: bash
         run: |
           if [ "${{ secrets.PROD_TOKEN }}" == "$LOCAL_PROD_TOKEN" ]; then
             echo "Token correcto."
