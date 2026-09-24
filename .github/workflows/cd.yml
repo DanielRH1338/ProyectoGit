@@ -25,7 +25,7 @@ jobs:
      steps:
       - name: Validar Token de Producción
         env:
-          SECRET_TOKEN: ${{ secrets.secret345 }}
+          SECRET_TOKEN: ${{ secrets.PROD_TOKEN }}
         run: |
           if ("$env:SECRET_TOKEN" -eq "$env:LOCAL_PROD_TOKEN") {
             echo "Token correcto."
