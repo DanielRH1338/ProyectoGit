@@ -24,6 +24,8 @@ jobs:
      runs-on: self-hosted
      steps:
       - name: Validar Token de Producción
+        env:
+          SECRET_TOKEN: ${{ secrets.TU_NOMBRE_DE_SECRETO }}
         run: |
           if ("$env:SECRET_TOKEN" -eq "$env:LOCAL_PROD_TOKEN") {
             echo "Token correcto."
