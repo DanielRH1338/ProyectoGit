@@ -1,0 +1,33 @@
+name: CD Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+   update-readme:
+     runs-on: ubuntu-latest
+     steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+      
+      - name: Incrementar versión en README
+        run: sed -i "s/AppVersion-[0-9]*/AppVersion-$(date +'%Y%m%d-%H%M%S')/g" README.md
+   
+   validate-prod:
+     needs: update-readme
+     runs-on: self-hosted
+     steps:
+      - name: Validar Token de Producción
+        run: |
+          if [ "${{ secrets.PROD_TOKEN }}" == "$LOCAL_PROD_TOKEN" ]; then
+            echo "Token correcto."
+          else
+            echo "Token incorrecto."
+            exit 1
+          fi

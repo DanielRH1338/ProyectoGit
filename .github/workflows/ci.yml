@@ -1,0 +1,33 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - develop
+  workflow_dispatch:
+jobs:
+   update-readme:
+     runs-on: ubuntu-latest
+     steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+      
+      - name: Añadir texto al README
+        run: echo "Añadida feature: ${{ github.ref_name }}" >> README.md
+  
+   validate-dev:
+    needs: update-readme
+    runs-on: self-hosted
+    steps:
+      - name: Validar Token
+        run: |
+          if [ "${{ secrets.DEV_TOKEN }}" == "$LOCAL_DEV_TOKEN" ]; then
+            echo "Token correcto."
+          else
+            echo "Token incorrecto."
+            exit 1
+          fi
