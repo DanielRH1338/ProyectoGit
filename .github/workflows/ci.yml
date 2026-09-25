@@ -19,11 +19,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.PROD_TOKEN }}
 
       - name: Registrar feature en README y subir
         env:
-          PAT: ${{ secrets.PAT_TOKEN }}
+          PAT: ${{ secrets.PROD_TOKEN }}
           COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
           git config --global user.name "github-actions[bot]"
