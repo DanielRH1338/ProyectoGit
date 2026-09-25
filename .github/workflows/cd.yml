@@ -41,7 +41,6 @@ jobs:
           if (-not [string]::IsNullOrEmpty("$env:PROD_SECRET")) {
             Write-Host "Token de producción validado con éxito."
             Write-Host "Desplegando versión estable en el entorno de producción..."
-            # Aquí puedes añadir los comandos o scripts de tu aplicación para producción
           } else {
             Write-Host "Error crítico: El token de producción no está disponible."
             exit 1
@@ -50,4 +49,5 @@ jobs:
 
       - name: Notificar fin de despliegue
         run: |
-          Write-Host "¡Pipeline de CD finalizado con éxito en la máquina local (DANI-PC)!"
+          Write-Host "¡Pipeline de CD finalizado con éxito en la máquina local!"
+        shell: pwsh
