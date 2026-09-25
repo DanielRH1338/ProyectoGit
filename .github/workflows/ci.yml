@@ -49,10 +49,17 @@ jobs:
         env:
           TOKEN: ${{ secrets.DEV_TOKEN }}
         run: |
-          if ($env:TOKEN -eq $env:LOCAL_DEV_TOKEN) {
-            Write-Host "Coinciden DEV_TOKEN"
+          Write-Host "Comprobando token de desarrollo..."
+          $localToken = $env:LOCAL_DEV_TOKEN
+          if ([string]::IsNullOrEmpty($localToken)) {
+            Write-Host "Error: La variable local LOCAL_DEV_TOKEN no está definida en la máquina."
+            exit 1
+          }
+          
+          if ("$env:TOKEN" -eq "$localToken") {
+            Write-Host "¡Coinciden DEV_TOKEN correctamente!"
           } else {
-            Write-Host "No coinciden DEV_TOKEN"
+            Write-Host "Error: No coinciden los tokens."
             exit 1
           }
         shell: pwsh
