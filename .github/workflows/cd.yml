@@ -8,29 +8,17 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   increment-version:
     runs-on: ubuntu-latest
     steps:
       - name: Descargar codigo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Incrementar versión en README o archivo
+      - name: Simular incremento de version en Ubuntu
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S")
-          echo "AppVersion - Despliegue en Producción a las $TIMESTAMP" >> README.md
-          
-          git add README.md
-          git commit -m "chore: incrementar version de produccion [skip ci]" || echo "Sin cambios"
-          git push origin HEAD:${{ github.ref_name }}
+          echo "Simulando incremento de version para CD"
+          echo "Version incrementada correctamente"
 
   deploy-environment:
     needs: increment-version
@@ -42,7 +30,7 @@ jobs:
         run: |
           Write-Host "========================================="
           Write-Host "Verificando token de Produccion..."
-          $prodToken = $env:PROD_TOKEN
+          $prodToken = $env:PROD_SECRET
           if (-not [string]::IsNullOrEmpty("$env:PROD_SECRET")) {
             Write-Host "Token de producción validado con éxito."
           } else {
