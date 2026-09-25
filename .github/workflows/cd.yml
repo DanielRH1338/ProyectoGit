@@ -9,11 +9,6 @@ jobs:
   deploy-environment:
     runs-on: [self-hosted, Windows]
     steps:
-      - name: Descargar codigo actualizado
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: Verificar entorno y credenciales
         env:
           PROD_SECRET: ${{ secrets.PROD_TOKEN }}
@@ -28,7 +23,6 @@ jobs:
         if: github.ref_name == 'develop'
         run: |
           Write-Host "Ejecutando tareas de despliegue para el entorno de desarrollo..."
-          Write-Host "Sincronizando archivos con el servidor local de pruebas..."
           Write-Host "Entorno de desarrollo desplegado correctamente."
         shell: pwsh
 
@@ -40,7 +34,6 @@ jobs:
           Write-Host "Verificando seguridad para entorno de producción..."
           if (-not [string]::IsNullOrEmpty("$env:PROD_SECRET")) {
             Write-Host "Token de producción validado con éxito."
-            Write-Host "Desplegando versión estable en el entorno de producción..."
           } else {
             Write-Host "Error crítico: El token de producción no está disponible."
             exit 1
