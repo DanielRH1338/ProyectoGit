@@ -8,17 +8,29 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   increment-version:
     runs-on: ubuntu-latest
     steps:
       - name: Descargar codigo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Simular incremento de version en Ubuntu
+      - name: Incrementar versión en README o archivo
         run: |
-          echo "Simulando incremento de version para CD"
-          echo "Version incrementada correctamente"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S")
+          echo "AppVersion - Despliegue en Producción a las $TIMESTAMP" >> README.md
+          
+          git add README.md
+          git commit -m "chore: incrementar version de produccion [skip ci]" || echo "Sin cambios"
+          git push origin HEAD:${{ github.ref_name }}
 
   deploy-environment:
     needs: increment-version
@@ -38,4 +50,4 @@ jobs:
             exit 1
           }
           Write-Host "========================================="
-        shell: pwsh
+        shell: powershell
