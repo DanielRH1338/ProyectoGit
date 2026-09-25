@@ -17,3 +17,4 @@ Añadida feature: CI.yml
 Añadida feature: CD.yml
 
 Added permissions for write access and updated version increment step.
+Añadida feature: feature/actualizacion
