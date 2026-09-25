@@ -2,10 +2,10 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ "develop", "main" ]
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [ develop ]
+    branches: [ "develop", "main" ]
   workflow_dispatch:
 
 permissions:
@@ -28,7 +28,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout develop
+          git checkout develop || git checkout main
           
           FEATURE_NAME=$(echo "$COMMIT_MSG" | grep -oE "from [^/]+/(.+)" | sed -E 's/from [^/]+\///' || echo "")
           if [ -z "$FEATURE_NAME" ]; then
@@ -39,11 +39,11 @@ jobs:
           
           git add README.md
           git commit -m "docs: registrar feature en README [skip ci]" || echo "Sin cambios"
-          git push https://x-access-token:${PAT}@github.com/${{ github.repository }}.git develop
+          git push https://x-access-token:${PAT}@github.com/${{ github.repository }}.git HEAD:${{ github.ref_name }}
 
   validate-dev:
     needs: update-readme
-    runs-on: self-hosted
+    runs-on: [self-hosted, Windows]
     steps:
       - name: Comparar DEV_TOKEN con variable local
         env:
@@ -55,3 +55,4 @@ jobs:
             Write-Host "No coinciden DEV_TOKEN"
             exit 1
           }
+        shell: pwsh
