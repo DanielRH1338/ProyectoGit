@@ -2,45 +2,52 @@ name: CD Workflow
 
 on:
   push:
-    branches: [ "develop", "main" ]
+    branches: [ "main" ]
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [ "main" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
+  increment-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Incrementar versión en README o archivo
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S")
+          echo "AppVersion - Despliegue en Producción a las $TIMESTAMP" >> README.md
+          
+          git add README.md
+          git commit -m "chore: incrementar version de produccion [skip ci]" || echo "Sin cambios"
+          git push origin HEAD:${{ github.ref_name }}
+
   deploy-environment:
+    needs: increment-version
     runs-on: [self-hosted, Windows]
     steps:
-      - name: Verificar entorno y credenciales
+      - name: Verificar PROD_TOKEN con variable local
         env:
           PROD_SECRET: ${{ secrets.PROD_TOKEN }}
         run: |
           Write-Host "========================================="
-          Write-Host "Iniciando proceso de Despliegue Continuo"
-          Write-Host "Rama actual detectada: ${{ github.ref_name }}"
-          Write-Host "========================================="
-        shell: pwsh
-
-      - name: Despliegue en Desarrollo (develop)
-        if: github.ref_name == 'develop'
-        run: |
-          Write-Host "Ejecutando tareas de despliegue para el entorno de desarrollo..."
-          Write-Host "Entorno de desarrollo desplegado correctamente."
-        shell: pwsh
-
-      - name: Despliegue en Producción (main)
-        if: github.ref_name == 'main'
-        env:
-          PROD_SECRET: ${{ secrets.PROD_TOKEN }}
-        run: |
-          Write-Host "Verificando seguridad para entorno de producción..."
-          $prodToken = $env:PROD_SECRET
-          if (-not [string]::IsNullOrEmpty($prodToken)) {
+          Write-Host "Verificando token de Produccion..."
+          $prodToken = $env:PROD_TOKEN
+          if (-not [string]::IsNullOrEmpty("$env:PROD_SECRET")) {
             Write-Host "Token de producción validado con éxito."
           } else {
-            Write-Host "Aviso: Entorno de producción simulado sin token estricto para pruebas."
+            Write-Host "Error crítico: El token de producción no está disponible."
+            exit 1
           }
-        shell: pwsh
-
-      - name: Notificar fin de despliegue
-        run: |
-          Write-Host "¡Pipeline de CD finalizado con éxito en la máquina local!"
+          Write-Host "========================================="
         shell: pwsh
