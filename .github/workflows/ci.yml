@@ -39,7 +39,7 @@ jobs:
           
           git add README.md
           git commit -m "docs: registrar feature en README [skip ci]" || echo "Sin cambios"
-          git push https://x-access-token:${PAT}@github.com/${{ github.repository }}.git HEAD:${{ github.ref_name }}
+          git push https://${PAT}@github.com/${{ github.repository }}.git HEAD:${{ github.ref_name }}
 
   validate-dev:
     needs: update-readme
