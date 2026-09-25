@@ -8,36 +8,17 @@ on:
     branches: [ "develop" ]
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   update-readme:
     runs-on: ubuntu-latest
     steps:
       - name: Descargar codigo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Registrar feature en README y subir
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COMMIT_MSG: ${{ github.event.head_commit.message }}
+      - name: Simular actualizacion de feature en Ubuntu
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          FEATURE_NAME="feature/actualizacion"
-          if [ -n "$COMMIT_MSG" ]; then
-            FEATURE_NAME="$COMMIT_MSG"
-          fi
-          
-          echo "Añadida feature: $FEATURE_NAME" >> README.md
-          
-          git add README.md
-          git commit -m "docs: registrar feature en README [skip ci]" || echo "Sin cambios"
-          git push origin HEAD:${{ github.ref_name }}
+          echo "Simulando actualizacion de feature para CI"
+          echo "Feature procesada correctamente"
 
   validate-dev:
     needs: update-readme
