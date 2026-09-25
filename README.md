@@ -1,4 +1,3 @@
-"Feature añadida por el colaborador"
-
 AppVersion-0
-Añadida feature: feature/mi-feature
+AppVersion-1
+AppVersion-2
