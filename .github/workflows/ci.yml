@@ -4,8 +4,8 @@ on:
   push:
     branches: [ develop ]
   pull_request:
+    types: [opened, synchronize, reopened]
     branches: [ develop ]
-
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,6 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git checkout develop
           
-          # Extraer feature del mensaje o usar una por defecto
           FEATURE_NAME=$(echo "$COMMIT_MSG" | grep -oE "from [^/]+/(.+)" | sed -E 's/from [^/]+\///' || echo "")
           if [ -z "$FEATURE_NAME" ]; then
             FEATURE_NAME="feature/mi-feature"
